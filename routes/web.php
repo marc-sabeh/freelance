@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\ImportController;
+use App\Models\import;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +17,10 @@ use App\Http\Controllers\ReportsController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    (new import())->importToDb();
+    dd('done');
+    return view('welcome'); 
 });
 
 Route::resource('reports', ReportsController::class)->shallow();
+Route::resource('import', ImportController::class)->shallow();
