@@ -11,32 +11,12 @@
 </form>
     <a href="/import/create">Go to import csv file</a>
     @isset(Request::all()['date_start'])
-
+{{-- {{$total_signed}} --}}
+{{-- {{$bounds}} --}}
     <h1>Users</h1>
-{{-- {{$logs}} --}}
-    {{-- <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">User</th>
-            <th scope="col">info</th>
-            <th scope="col">calculation</th> --}}
 
-
-            {{-- <th scope="col">Types of user</th>
-            <th scope="col">Number of type</th>
-            <th scope="col">Emails</th> --}}
-
-
-            {{-- <th scope="col"></th> --}}
-            
-          {{-- </tr>
-        </thead>
-        <tbody> --}}
         @foreach ($users as $user)
-        <br>
-
-      {{-- <tr> --}}
-      {{-- <th scope="row">{{$log->id}}</th> --}}
+        <div class="border border-primary p-3 m-3 shadow p-3 mb-5 bg-white rounded">
         <h5>{{$user->user_first_name}} {{$user->user_last_name}}</h5>
         @foreach ($logs as $log)
             @if ($user->created_by == $log->created_by)
@@ -45,17 +25,22 @@
             @endif
         @endforeach
         <br>
+        <hr>
+        @foreach ($bounds as $bound)
+            @if ($user->created_by == $bound->user_id)
+           {{$bound->type}}bound:
+           {{$bound->bounds_count}}
+            @endif
+        @endforeach
+        <br>
+        <hr>
+        @foreach ($total_signed as $total_sign)
+            @if ($user->created_by == $total_sign->created_by)
+           Total signed: {{$total_sign->count_signed_status_per_user}}
+            @endif
+        @endforeach
+    </div>
 
-    {{-- </td> --}}
-        {{-- <td>
-            @if ($log->type_id == 4)
-            {{$log->count_type}}       
-            @endif    
-        </td> --}}
-
-
-      {{-- </tr> --}}
-    
             
     @endforeach
 
