@@ -18,6 +18,8 @@
         @foreach ($users as $user)
         <div class="border border-primary p-3 m-3 shadow p-3 mb-5 bg-white rounded">
         <h5>{{$user->user_first_name}} {{$user->user_last_name}}</h5>
+        Report 1
+
         @foreach ($logs as $log)
             @if ($user->created_by == $log->created_by)
            {{$log->type_name}}:
@@ -39,6 +41,12 @@
            Total signed: {{$total_sign->count_signed_status_per_user}}
             @endif
         @endforeach
+
+        @foreach ($total_nbr_of_working_days as $total_nbr_of_working_day)
+        @if ($user->created_by == $total_nbr_of_working_day->user_id)
+       Total working days for this month: {{$total_nbr_of_working_day->month}}  is: {{$total_nbr_of_working_day->number_of_attendance}}
+        @endif
+    @endforeach
     </div>
 
             

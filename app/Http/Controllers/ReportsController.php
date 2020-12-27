@@ -27,11 +27,9 @@ class ReportsController extends Controller
         ->groupBy('type_id','created_by')
         ->distinct(['created'])
         ->whereBetween('created', [$date_start." 00:00:00",$date_end." 23:59:59"])
-        // ->where('created', '>=', $date_start)
-        // ->where('created', '<=', $date_end)
         ->get();
         
-        // $users = users::all();
+
         $users=DB::table('log_activity')
         ->select('created_by',DB::raw('(Select first_name from users where id=log_activity.created_by) as user_first_name'),DB::raw('(Select last_name from users where id=log_activity.created_by) as user_last_name') )
         ->groupBy('created_by')
@@ -42,58 +40,23 @@ class ReportsController extends Controller
             ->groupBy('created_by')
             ->distinct(['created'])
             ->whereBetween('created', [$date_start." 00:00:00",$date_end." 23:59:59"])
-
-            // ->where('created', '>=', $date_start)
-            // ->where('created', '<=', $date_end)
             ->get();
-            // SELECT created_by, @status :=(SELECT count(*) FROM `esign_docs` where case_id=case_assignments.case_id and status='Signed')as count_signed_status, SUM(@status) as count_signed_status_per_user FROM `case_assignments` GROUP BY created_by
+
         $bounds = DB::table('timeclock')
         ->select('user_id','type',DB::raw('(count(type)) as bounds_count') )
         ->groupBy('type', 'user_id')
         ->distinct(['timeinout'])
         ->whereBetween('timeinout', [$date_start." 00:00:00",$date_end." 23:59:59"])
+        ->get();
 
-        // ->where('timeinout', '>=', $date_start)
-        // ->where('timeinout', '<=', $date_end)
+        $total_nbr_of_working_days =DB::table('attendance')
+        ->select('user_id','number_of_attendance', 'month')
+        ->whereBetween('month', [$date_start." 00:00:00",$date_end." 23:59:59"])
         ->get();
 
 
-
-        return view('reports.index', compact('users','logs','bounds','total_signed','date_start'));
+        return view('reports.index', compact('users','logs','bounds','total_signed','total_nbr_of_working_days','date_start'));
     }
-
-    
-    // function import(Request $request)
-    // {
-    //  $this->validate($request, [
-    //   'select_file'  => 'required|mimes:xls,xlsx'
-    //  ]);
-
-    //  $path = $request->file('select_file')->getRealPath();
-
-    //  $data = Excel::load($path)->get();
-
-    //  if($data->count() > 0)
-    //  {
-    //   foreach($data->toArray() as $key => $value)
-    //   {
-    //    foreach($value as $row)
-    //    {
-    //     $insert_data[] = array(
-    //      'CustomerName'  => $row['customer_name'],
-    //      'Gender'   => $row['gender'],
-    //      'Address'   => $row['address'],
-    //      'City'    => $row['city'],
-    //      'PostalCode'  => $row['postal_code'],
-    //      'Country'   => $row['country']
-    //     );
-    //    }
-    //   }
-
-
-    //  }
-    //  return back()->with('success', 'Excel Data Imported successfully.');
-    // }
 
     /**
      * Show the form for creating a new resource.
